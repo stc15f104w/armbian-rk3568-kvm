@@ -11,6 +11,8 @@ if [[ ! -f "${dts_source}" ]]; then
   dts_source="${src_dir}/patches/rk3568-ydtx-kvm.dts"
 fi
 
+dts_lines="$(wc -l < "${dts_source}" | tr -d '[:space:]')"
+
 mkdir -p \
   "${userpatches}/config/boards" \
   "${userpatches}/kernel/rockchip-rk3568-current" \
@@ -54,6 +56,7 @@ for target in \
     printf '%s\n' 'index 000000000000..222222222222'
     printf '%s\n' '--- /dev/null'
     printf '%s\n' '+++ b/arch/arm64/boot/dts/rockchip/rk3568-ydtx-kvm.dts'
+    printf '%s\n' "@@ -0,0 +1,${dts_lines} @@"
     sed 's/^/+/' "${dts_source}"
   } > "${target}"
 done

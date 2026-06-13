@@ -417,22 +417,56 @@
 	status = "okay";
 };
 
-&u2phy0_host {
+&usb2phy0 {
+	status = "okay";
+};
+
+&usb2phy0_host {
 	phy-supply = <&vcc5v0_host>;
 	status = "okay";
 };
 
-&u2phy0_otg {
+&usb2phy0_otg {
 	phy-supply = <&vcc5v0_otg>;
 	status = "okay";
 };
 
-&u2phy1_host {
+&usb2phy1 {
+	status = "okay";
+};
+
+&usb2phy1_host {
 	phy-supply = <&vcc5v0_host>;
 	status = "okay";
 };
 
-&u2phy1_otg {
+&usb2phy1_otg {
 	phy-supply = <&vcc5v0_otg>;
+	status = "okay";
+};
+
+&usb_host0_ehci {
+	status = "okay";
+};
+
+&usb_host0_ohci {
+	status = "okay";
+};
+
+&usb_host0_xhci {
+	dr_mode = "host";
+	extcon = <&usb2phy0>;
+	status = "okay";
+};
+
+&usb_host1_ehci {
+	status = "okay";
+};
+
+&usb_host1_ohci {
+	status = "okay";
+};
+
+&usb_host1_xhci {
 	status = "okay";
 };
