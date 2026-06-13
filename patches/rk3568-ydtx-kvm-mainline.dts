@@ -114,6 +114,7 @@
 	tx_delay = <0x3c>;
 	rx_delay = <0x34>;
 	phy-handle = <&rgmii_phy0>;
+	phy-supply = <&vcc_1v8>;
 	status = "okay";
 
 	mdio {
@@ -143,6 +144,7 @@
 	tx_delay = <0x48>;
 	rx_delay = <0x2a>;
 	phy-handle = <&rgmii_phy1>;
+	phy-supply = <&vcc_1v8>;
 	status = "okay";
 
 	mdio {
