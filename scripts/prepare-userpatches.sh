@@ -5,6 +5,11 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 src_dir="${repo_root}"
 build_dir="${1:-${repo_root}/build}"
 userpatches="${build_dir}/userpatches"
+dts_source="${src_dir}/patches/rk3568-ydtx-kvm-mainline.dts"
+
+if [[ ! -f "${dts_source}" ]]; then
+  dts_source="${src_dir}/patches/rk3568-ydtx-kvm.dts"
+fi
 
 mkdir -p \
   "${userpatches}/config/boards" \
@@ -41,8 +46,9 @@ for target in \
     printf '%s\n' 'index 000000000000..222222222222'
     printf '%s\n' '--- /dev/null'
     printf '%s\n' '+++ b/arch/arm64/boot/dts/rockchip/rk3568-ydtx-kvm.dts'
-    sed 's/^/+/' "${src_dir}/patches/rk3568-ydtx-kvm.dts"
+    sed 's/^/+/' "${dts_source}"
   } > "${target}"
 done
 
 echo "Prepared Armbian userpatches in ${userpatches}"
+echo "Using DTS source ${dts_source}"

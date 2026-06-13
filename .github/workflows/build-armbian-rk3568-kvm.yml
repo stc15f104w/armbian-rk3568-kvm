@@ -45,6 +45,11 @@ jobs:
           large-packages: true
           swap-storage: true
 
+      - name: Set up QEMU binfmt
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64,arm
+
       - name: Checkout Armbian build
         uses: actions/checkout@v4
         with:
