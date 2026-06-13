@@ -23,7 +23,8 @@
 		ethernet1 = &gmac1;
 		mmc0 = &sdhci;
 		mmc1 = &sdmmc0;
-		serial0 = &uart0;
+		serial0 = &uart2;
+		serial1 = &uart0;
 	};
 
 	chosen {
@@ -414,6 +415,10 @@
 };
 
 &uart0 {
+	status = "okay";
+};
+
+&uart2 {
 	status = "okay";
 };
 

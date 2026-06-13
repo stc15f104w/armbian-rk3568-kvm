@@ -1,0 +1,101 @@
+name: Build RK3568 KVM DTB Only
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Debian/Ubuntu release used for Armbian configuration
+        required: true
+        default: bookworm
+        type: choice
+        options:
+          - bookworm
+          - trixie
+          - noble
+      branch:
+        description: Armbian kernel branch
+        required: true
+        default: current
+        type: choice
+        options:
+          - current
+          - edge
+
+jobs:
+  build-dtb:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout Armbian build
+        uses: actions/checkout@v4
+        with:
+          repository: armbian/build
+          path: build
+          fetch-depth: 1
+
+      - name: Prepare custom board and DTS patches
+        shell: bash
+        run: bash ./scripts/prepare-userpatches.sh "$GITHUB_WORKSPACE/build"
+
+      - name: Build kernel DTB
+        shell: bash
+        working-directory: build
+        run: |
+          ./compile.sh \
+            kernel \
+            BOARD=rk3568-ydtx-kvm \
+            BRANCH=${{ inputs.branch }} \
+            RELEASE=${{ inputs.release }} \
+            KERNEL_CONFIGURE=no \
+            BUILD_DESKTOP=no \
+            BUILD_MINIMAL=yes \
+            EXPERT=yes
+
+      - name: Collect custom DTB
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p dtb-output
+          dtb_path="$(find build -path '*/arch/arm64/boot/dts/rockchip/rk3568-ydtx-kvm.dtb' -print -quit)"
+
+          if [[ -z "${dtb_path}" ]]; then
+            echo "rk3568-ydtx-kvm.dtb was not found in the Armbian build tree" >&2
+            find build -name '*.dtb' | sort | tail -200 >&2
+            exit 1
+          fi
+
+          cp "${dtb_path}" dtb-output/rk3568-ydtx-kvm.dtb
+          sha256sum dtb-output/rk3568-ydtx-kvm.dtb | tee dtb-output/rk3568-ydtx-kvm.dtb.sha256
+          ls -lh dtb-output
+
+      - name: Upload DTB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rk3568-ydtx-kvm-dtb-${{ inputs.release }}-${{ inputs.branch }}
+          path: dtb-output/*
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rk3568-ydtx-kvm-dtb-logs-${{ inputs.release }}-${{ inputs.branch }}
+          path: build/output/logs/*
+          if-no-files-found: ignore
+          retention-days: 14
