@@ -17,6 +17,10 @@ mkdir -p \
   "${userpatches}/kernel/rockchip-rk3568-edge" \
   "${userpatches}/kernel/rockchip64-current" \
   "${userpatches}/kernel/rockchip64-edge" \
+  "${userpatches}/kernel/archive/rockchip64-6.18" \
+  "${userpatches}/kernel/archive/rockchip64-6.17" \
+  "${userpatches}/kernel/archive/rockchip64-6.16" \
+  "${userpatches}/kernel/archive/rockchip64-6.15" \
   "${userpatches}/kernel/archive/rockchip-rk3568-6.12" \
   "${userpatches}/kernel/archive/rockchip-rk3568-6.6" \
   "${userpatches}/kernel/archive/rockchip64-6.12" \
@@ -30,6 +34,10 @@ for target in \
   "${userpatches}/kernel/rockchip-rk3568-edge/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
   "${userpatches}/kernel/rockchip64-current/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
   "${userpatches}/kernel/rockchip64-edge/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
+  "${userpatches}/kernel/archive/rockchip64-6.18/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
+  "${userpatches}/kernel/archive/rockchip64-6.17/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
+  "${userpatches}/kernel/archive/rockchip64-6.16/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
+  "${userpatches}/kernel/archive/rockchip64-6.15/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
   "${userpatches}/kernel/archive/rockchip-rk3568-6.12/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
   "${userpatches}/kernel/archive/rockchip-rk3568-6.6/patch-001-add-rk3568-ydtx-kvm-dts.patch" \
   "${userpatches}/kernel/archive/rockchip64-6.12/patch-001-add-rk3568-ydtx-kvm-dts.patch" \

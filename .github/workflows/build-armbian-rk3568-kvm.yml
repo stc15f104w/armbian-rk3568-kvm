@@ -76,6 +76,11 @@ jobs:
             EXPERT=yes \
             COMPRESS_OUTPUTIMAGE=sha,img
 
+      - name: Verify custom DTB was built
+        shell: bash
+        run: |
+          find build -name rk3568-ydtx-kvm.dtb -print -quit | grep -q .
+
       - name: Upload image artifact
         uses: actions/upload-artifact@v4
         with:
