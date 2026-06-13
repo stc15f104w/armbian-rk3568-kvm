@@ -23,12 +23,13 @@
 		ethernet1 = &gmac1;
 		mmc0 = &sdhci;
 		mmc1 = &sdmmc0;
-		serial0 = &uart2;
-		serial1 = &uart0;
+		serial0 = &uart0;
+		serial1 = &uart1;
+		serial2 = &uart2;
 	};
 
 	chosen {
-		stdout-path = "serial0:1500000n8";
+		stdout-path = "serial2:1500000n8";
 	};
 
 	vcc3v3_sys: vcc3v3-sys {
