@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-src_dir="${repo_root}/armbian-rk3568-kvm"
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+src_dir="${repo_root}"
 build_dir="${1:-${repo_root}/build}"
 userpatches="${build_dir}/userpatches"
 

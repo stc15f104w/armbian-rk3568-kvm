@@ -31,7 +31,7 @@ Example from Linux/WSL2:
 ```bash
 mkdir -p /mnt/d/armbian-build
 git clone --depth=1 https://github.com/armbian/build.git /mnt/d/armbian-build/build
-./armbian-rk3568-kvm/scripts/prepare-userpatches.sh /mnt/d/armbian-build/build
+./scripts/prepare-userpatches.sh /mnt/d/armbian-build/build
 cd /mnt/d/armbian-build/build
 ./compile.sh build BOARD=rk3568-ydtx-kvm BRANCH=current RELEASE=bookworm BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_CONFIGURE=no EXPERT=yes
 ```

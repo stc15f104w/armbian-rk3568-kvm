@@ -54,7 +54,7 @@ jobs:
 
       - name: Prepare custom board and DTS patches
         shell: bash
-        run: bash ./armbian-rk3568-kvm/scripts/prepare-userpatches.sh "$GITHUB_WORKSPACE/build"
+        run: bash ./scripts/prepare-userpatches.sh "$GITHUB_WORKSPACE/build"
 
       - name: Build image
         shell: bash
