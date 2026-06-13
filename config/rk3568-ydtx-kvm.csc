@@ -1,0 +1,8 @@
+BOARD_NAME="IKAS KVM RK3568"
+BOARDFAMILY="rockchip-rk3568"
+BOOTCONFIG="evb-rk3568_defconfig"
+BOOT_FDT_FILE="rockchip/rk3568-ydtx-kvm.dtb"
+KERNEL_TARGET="current"
+BOOT_LOGO="desktop"
+FULL_DESKTOP="no"
+ASOUND_STATE="asound.state.station-p2"

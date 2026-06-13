@@ -1,0 +1,84 @@
+name: Build Armbian RK3568 KVM
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Debian/Ubuntu release
+        required: true
+        default: bookworm
+        type: choice
+        options:
+          - bookworm
+          - trixie
+          - noble
+      branch:
+        description: Armbian kernel branch
+        required: true
+        default: current
+        type: choice
+        options:
+          - current
+          - edge
+      minimal:
+        description: Build minimal server image
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout Armbian build
+        uses: actions/checkout@v4
+        with:
+          repository: armbian/build
+          path: build
+          fetch-depth: 1
+
+      - name: Prepare custom board and DTS patches
+        shell: bash
+        run: bash ./armbian-rk3568-kvm/scripts/prepare-userpatches.sh "$GITHUB_WORKSPACE/build"
+
+      - name: Build image
+        shell: bash
+        working-directory: build
+        run: |
+          ./compile.sh \
+            build \
+            BOARD=rk3568-ydtx-kvm \
+            BRANCH=${{ inputs.branch }} \
+            RELEASE=${{ inputs.release }} \
+            BUILD_MINIMAL=${{ inputs.minimal && 'yes' || 'no' }} \
+            BUILD_DESKTOP=no \
+            KERNEL_CONFIGURE=no \
+            EXPERT=yes \
+            COMPRESS_OUTPUTIMAGE=sha,img
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: armbian-rk3568-kvm-${{ inputs.release }}-${{ inputs.branch }}
+          path: |
+            build/output/images/*.img
+            build/output/images/*.img.sha
+            build/output/images/*.txt
+            build/output/debs/*.deb
+          if-no-files-found: warn
+          retention-days: 14
