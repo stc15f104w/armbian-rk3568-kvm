@@ -102,7 +102,7 @@
 &gmac0 {
 	phy-mode = "rgmii";
 	clock_in_out = "output";
-	snps,reset-gpio = <&gpio4 RK_PB7 GPIO_ACTIVE_LOW>;
+	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
 	snps,reset-active-low;
 	snps,reset-delays-us = <0 20000 100000>;
 	assigned-clocks = <&cru 0x185>, <&cru 0x182>;
@@ -132,7 +132,7 @@
 &gmac1 {
 	phy-mode = "rgmii";
 	clock_in_out = "output";
-	snps,reset-gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_LOW>;
+	snps,reset-gpio = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>;
 	snps,reset-active-low;
 	snps,reset-delays-us = <0 20000 100000>;
 	assigned-clocks = <&cru 0x189>, <&cru 0x186>;
@@ -144,7 +144,6 @@
 	tx_delay = <0x48>;
 	rx_delay = <0x2a>;
 	phy-handle = <&rgmii_phy1>;
-	phy-supply = <&vcc_1v8>;
 	status = "okay";
 
 	mdio {
