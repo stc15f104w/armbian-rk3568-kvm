@@ -57,13 +57,50 @@ jobs:
           path: build
           fetch-depth: 1
 
+      - name: Restore Armbian build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .ccache
+            build/cache
+            build/output/debs
+          key: armbian-${{ runner.os }}-${{ inputs.release }}-${{ inputs.branch }}-${{ inputs.minimal }}-${{ hashFiles('config/**', 'patches/**', 'scripts/**', '.github/workflows/build-armbian-rk3568-kvm.yml') }}
+          restore-keys: |
+            armbian-${{ runner.os }}-${{ inputs.release }}-${{ inputs.branch }}-${{ inputs.minimal }}-
+            armbian-${{ runner.os }}-${{ inputs.release }}-${{ inputs.branch }}-
+            armbian-${{ runner.os }}-
+
       - name: Prepare custom board and DTS patches
         shell: bash
         run: bash ./scripts/prepare-userpatches.sh "$GITHUB_WORKSPACE/build"
 
+      - name: Disable inherited APT proxy
+        shell: bash
+        run: |
+          sudo rm -f /etc/apt/apt.conf.d/*proxy* /etc/apt/apt.conf.d/*Proxy*
+          unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY apt_proxy APT_PROXY
+          echo "APT_PROXY=" >> "$GITHUB_ENV"
+          echo "apt_proxy=" >> "$GITHUB_ENV"
+          echo "http_proxy=" >> "$GITHUB_ENV"
+          echo "https_proxy=" >> "$GITHUB_ENV"
+          echo "HTTP_PROXY=" >> "$GITHUB_ENV"
+          echo "HTTPS_PROXY=" >> "$GITHUB_ENV"
+          echo "NO_APT_CACHER=yes" >> "$GITHUB_ENV"
+
       - name: Build image
         shell: bash
         working-directory: build
+        env:
+          APT_PROXY: ""
+          apt_proxy: ""
+          http_proxy: ""
+          https_proxy: ""
+          HTTP_PROXY: ""
+          HTTPS_PROXY: ""
+          NO_APT_CACHER: "yes"
+          USE_CCACHE: "yes"
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+          CCACHE_MAXSIZE: "2G"
         run: |
           ./compile.sh \
             build \
@@ -74,12 +111,22 @@ jobs:
             BUILD_DESKTOP=no \
             KERNEL_CONFIGURE=no \
             EXPERT=yes \
+            USE_CCACHE=yes \
+            CCACHE_DIR="${GITHUB_WORKSPACE}/.ccache" \
+            CCACHE_MAXSIZE=2G \
+            CLEAN_LEVEL="" \
+            NO_APT_CACHER=yes \
             COMPRESS_OUTPUTIMAGE=sha,img
 
       - name: Verify custom DTB was built
         shell: bash
         run: |
           find build -name rk3568-ydtx-kvm.dtb -print -quit | grep -q .
+
+      - name: Verify image artifact was built
+        shell: bash
+        run: |
+          find build/output/images -maxdepth 1 -name '*.img' -print -quit | grep -q .
 
       - name: Upload image artifact
         uses: actions/upload-artifact@v4
@@ -90,7 +137,7 @@ jobs:
             build/output/images/*.img.sha
             build/output/images/*.txt
             build/output/debs/*.deb
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
 
       - name: Upload build logs
