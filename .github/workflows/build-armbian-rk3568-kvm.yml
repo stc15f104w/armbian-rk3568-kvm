@@ -80,9 +80,6 @@ jobs:
           sudo rm -f /etc/apt/apt.conf.d/*proxy* /etc/apt/apt.conf.d/*Proxy*
           unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY apt_proxy APT_PROXY
           echo "APT_PROXY=" >> "$GITHUB_ENV"
-          echo "apt_proxy=" >> "$GITHUB_ENV"
-          echo "http_proxy=" >> "$GITHUB_ENV"
-          echo "https_proxy=" >> "$GITHUB_ENV"
           echo "HTTP_PROXY=" >> "$GITHUB_ENV"
           echo "HTTPS_PROXY=" >> "$GITHUB_ENV"
           echo "NO_APT_CACHER=yes" >> "$GITHUB_ENV"
@@ -92,9 +89,6 @@ jobs:
         working-directory: build
         env:
           APT_PROXY: ""
-          apt_proxy: ""
-          http_proxy: ""
-          https_proxy: ""
           HTTP_PROXY: ""
           HTTPS_PROXY: ""
           NO_APT_CACHER: "yes"
