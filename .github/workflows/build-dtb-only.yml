@@ -119,6 +119,15 @@ jobs:
           sha256sum dtb-output/rk3568-ydtx-kvm.dtb | tee dtb-output/rk3568-ydtx-kvm.dtb.sha256
           ls -lh dtb-output
 
+      - name: Prepare cache for save
+        shell: bash
+        run: |
+          sudo find build/cache/aptcache -type f -name lock -delete 2>/dev/null || true
+          sudo find build/cache/aptcache -type d -name partial -prune -exec rm -rf {} + 2>/dev/null || true
+          sudo find build/cache/sources -type f -name initramfs_data.cpio -delete 2>/dev/null || true
+          sudo chown -R "$USER:$USER" .ccache build/cache build/output/debs 2>/dev/null || true
+          chmod -R u+rwX .ccache build/cache build/output/debs 2>/dev/null || true
+
       - name: Upload DTB artifact
         uses: actions/upload-artifact@v4
         with:
